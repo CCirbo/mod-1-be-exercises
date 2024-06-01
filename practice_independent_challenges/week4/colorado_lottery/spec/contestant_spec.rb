@@ -19,12 +19,14 @@ RSpec.configure do |config|
                                     last_name: 'Franklin',
                                     age: 17,
                                     state_of_residence: 'PA',
-                                    spending_money: 100})                            
+                                    spending_money: 100})  
+            pick_4 = Game.new('Pick 4', 2)
+            mega_millions = Game.new('Mega Millions', 5, true)
     end
-    describe '#initialize' do
-        xit "should exist" do
-            expect(@alexander).to be_a Contestant   
-            expect(@benjamin).to be_a Contestant   
+    
+        it "should exist" do
+            expect(@alexander).to be_a(Contestant) 
+            expect(@benjamin).to be_a(Contestant)    
         end
 
         it "has a name" do
@@ -46,16 +48,13 @@ RSpec.configure do |config|
            expect(@alexander.spending_money).to eq(10)
            expect(@benjamin.spending_money).to eq(100)
         end
-    end
-
-    describe '#out of state' do
+    
+   
         it "can tell if resident is not in Colorado" do
             expect(@alexander.out_of_state?).to eq(false)
             expect(@benjamin.out_of_state?).to eq(true)
         end
-    end
-
-    describe '#if resident has game interests' do
+     
         it "it is empty by default" do
             expect(@alexander.game_interests).to eq([])
             expect(@benjamin.game_interests).to eq([])
@@ -63,17 +62,17 @@ RSpec.configure do |config|
 
         it "if resident can add game interests" do
             expect(@alexander.game_interests).to eq([])
-            @alexander.add_game_interest).to eq('Mega Millions')
-            @alexander.add_game_interest).to eq('Pick 4')
+            @alexander.add_game_interest('Mega Millions')
+            @alexander.add_game_interest('Pick 4')
             expect(@alexander.game_interests).to eq(["Mega Millions", "Pick 4"])
 
             expect(@benjamin.game_interests).to eq([])
-            @benjamin.add_game_interest).to eq('Mega Millions')
+            @benjamin.add_game_interest('Mega Millions')
             # expect(benjamin.add_game_interest).to eq('Pick 4')
             expect(@benjamin.game_interests).to eq(["Mega Millions"])
 
         end
-    end
+    
 end
 
 
