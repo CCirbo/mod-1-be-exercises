@@ -1,12 +1,17 @@
 class Game
     attr_reader :name,
-                :cost,
-                :drawing
+                :cost
+              
 
-    def initialize(name, cost, drawing = true)
+    def initialize(name, cost, national_drawing = false)
         @name = name
         @cost = cost
-        @drawing = drawing
+        @national_drawing = national_drawing
+    end
+
+    def national_drawing?
+       @national_drawing
+   
     end
 
 end
