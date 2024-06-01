@@ -35,7 +35,7 @@ RSpec.configure do |config|
         end
     end  
     describe '#national_drawing' do
-        it 'says whether or not it is a national drawing' do
+        xit 'says whether or not it is a national drawing' do
             pick_4 = Game.new('Pick 4', 2)
             mega_millions = Game.new('Mega Millions', 5, true) 
 

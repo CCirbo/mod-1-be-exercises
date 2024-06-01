@@ -55,26 +55,30 @@ RSpec.configure do |config|
         expect(@lottery.current_contestants).to eq({})
     end
 
-    # xit 'checks if contestant has interest' do
-    #     @alexander.add_game_interest('Pick 4')
-    #     @alexander.add_game_interest('Mega Millions')
-    #     @frederick.add_game_interest('Mega Millions')
-    #     @winston.add_game_interest('Cash 5')
-    #     @winston.add_game_interest('Mega Millions')
-    #     @benjamin.add_game_interest('Mega Millions')
-    # end
+    xit "can tell if a contestant is interested in a game and over 18" do
+        @alexander.add_game_interest('Pick 4')
+        # @alexander.add_game_interest('Mega Millions')
+        expect(@lottery.interested_and_18?(alexander, pick_4)).to eq(true)
+        expect(@lottery.interested_and_18?(alexander, cash_5)).to eq(false)
+      
+        # @winston.add_game_interest('Mega Millions')
 
-    xit "can tell if a contestant is interested and over 18" do
-        expect(@lottery.interested_and_18?).to eq(alexander, pick_4)
-        expect(@lottery.interested_and_18?).to eq(benjamin, mega_millions)
-        expect(@lottery.interested_and_18?).to eq(alexander, cash_5)
+        @benjamin.add_game_interest('Mega Millions')
+        expect(@lottery.interested_and_18?(benjamin, mega_millions)).to eq(false)
+        expect(@lottery.interested_and_18?(benjamin, cash_5)).to eq(false)
+        # @winston.add_game_interest('Cash 5')
     end
 
-    xit "can tell if a contestant can register?" do
+    xit "can register? contestants if interested, 18 and is in CO" do
+        @alexander.add_game_interest('Pick 4')        
         expect(@lottery.can_register?(alexander, pick_4)).to eq(true)
         expect(@lottery.can_register?(alexander, cash_5)).to eq(false)
+
+        @frederick.add_game_interest('Mega Millions')
         expect(@lottery.can_register?(frederick, mega_millions)).to eq(true)
-        expect(@lottery.can_register?(benjamin, mega_millions)).to eq(false)
         expect(@lottery.can_register?(frederick, cash_5)).to eq(false)
+
+        @benjamin.add_game_interest('Mega Millions')
+        expect(@lottery.can_register?(benjamin, mega_millions)).to eq(false)
     end
 end
