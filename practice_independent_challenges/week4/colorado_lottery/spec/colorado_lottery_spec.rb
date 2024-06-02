@@ -36,7 +36,7 @@ RSpec.configure do |config|
                                     last_name: 'Churchill',
                                     age: 18,
                                     state_of_residence: 'CO',
-                                    spending_money: 5})                            
+                                    spending_money: 4})                            
     end
 
     it 'it exists' do
@@ -44,7 +44,7 @@ RSpec.configure do |config|
     end
 
     it "has no registered_contestants by default" do
-        expect(@lottery.registered_contestants).to eq({})
+        expect(@lottery.registered_contestants).to eq({})        
     end
 
     it 'has no lottery_winners by default' do
@@ -89,4 +89,89 @@ RSpec.configure do |config|
         @benjamin.add_game_interest('Mega Millions')
         expect(@lottery.can_register?(@benjamin, @mega_millions)).to eq(false)
     end
+
+    it 'can register_contestants that can register' do
+        # if contestant can register(we have this), then shovel them in registered contestent
+        # return a contestant
+        # make sure the hash @register_contestants contains the contestants
+        # registered_contestents is a hash with keys of games and values of
+        # contestants registered.
+        # We will only register contestants that `#can_register?`
+        # `register_contestant`       | `Contestant`
+        @alexander.add_game_interest('Pick 4')  
+        @alexander.add_game_interest("Mega Millions")  #we need a string back 
+
+        @frederick.add_game_interest('Mega Millions')
+        @frederick.add_game_interest('Cash 5') #cannot register
+
+        @benjamin.add_game_interest('Mega Millions')
+    
+        expect(@lottery.register_contestant(@alexander, @pick_4)).to eq(@alexander)
+        expect(@lottery.registered_contestants).to eq({@pick_4 => [@alexander]})
+        expect(@lottery.register_contestant(@alexander, @mega_millions)).to eq(@alexander)
+        expect(@lottery.registered_contestants).to eq({@pick_4 => [@alexander], @mega_millions => [@alexander]})
+        
+        expect(@lottery.register_contestant(@frederick, @mega_millions)).to eq(@frederick)
+      
+        expect(@lottery.registered_contestants).to eq({@pick_4 => [@alexander], @mega_millions => [@alexander, @frederick]})
+        expect(@lottery.register_contestant(@frederick, @cash_5)).to eq(@frederick)
+        expect(@lottery.registered_contestants).to eq({@pick_4 => [@alexander], @mega_millions => [@alexander, @frederick]})
+
+        expect(@lottery.register_contestant(@benjamin, @mega_millions)).to eq(@benjamin)
+        expect(@lottery.registered_contestants).to eq({@pick_4 => [@alexander], @mega_millions => [@alexander, @frederick]})
+
+
+    end
+     
+    it "can have eligible_contestants" do
+        # `eligible_contestants`      | `Array` of `Contestant` objects
+        # who have registered for a given game()and have more spending monet
+        # than the cost to play
+        @alexander.add_game_interest('Pick 4')  
+        @alexander.add_game_interest("Mega Millions")  #we need a string back 
+
+     
+        @frederick.add_game_interest('Mega Millions')
+
+   
+
+        @winston.add_game_interest('Mega Millions')
+
+        @lottery.register_contestant(@alexander, @pick_4)
+        @lottery.register_contestant(@alexander, @mega_millions)
+        
+        @lottery.register_contestant(@frederick, @mega_millions)
+   
+
+        @lottery.register_contestant(@winston, @mega_millions)
+        expect(@lottery.registered_contestants).to eq({@pick_4 => [@alexander], @mega_millions => [@alexander, @frederick, @winston]})
+        expect(@lottery.eligible_contestants(@pick_4)).to eq([@alexander])
+        expect(@lottery.eligible_contestants(@mega_millions)).to eq([@alexander, @frederick])
+    end
+    #  it "it can charge contestants" do 
+    #     @alexander.add_game_interest('Pick 4')  
+    #     @alexander.add_game_interest("Mega Millions")  #we need a string back 
+     
+    #     @frederick.add_game_interest('Mega Millions')
+
+    #     @winston.add_game_interest('Mega Millions')
+
+    #     @lottery.register_contestant(@alexander, @pick_4)
+    #     @lottery.register_contestant(@alexander, @mega_millions)
+        
+    #     @lottery.register_contestant(@frederick, @mega_millions)
+   
+    #     @lottery.register_contestant(@winston, @mega_millions)
+    #     # expect(@lottery.eligible_contestants(@pick_4)).to eq([@alexander])
+    #     # expect(@lottery.eligible_contestants(@mega_millions)).to eq([@alexander, @frederick])
+    #     expect(@lottery.current_contestants).to eq({})
+    #     @lottery.charge_contestants(@pick_4)
+    #     expect(@lottery.current_contestants).to eq({@pick_4 => [@alexander], @mega_millions => [@alexander, @frederick]})
+    #     expext(@alexander.spending_money).to eq(10)
+    #  end    
+    # `current_contestants` |`Hash` where the key is a `Game` object and 
+    # the values is an array of contestant names 
+    # take their money and put them in the current array
+   
+
 end
